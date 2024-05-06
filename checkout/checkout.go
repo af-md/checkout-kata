@@ -16,7 +16,7 @@ func NewCheckout() *Checkout {
 	return &Checkout{}
 }
 
-func (c *Checkout) scanItem(item product.Item) error {
+func (c *Checkout) ScanItem(item product.Item) error {
 	if item.Sku == "" {
 		return errors.New("Empty SKU")
 	}
@@ -24,7 +24,7 @@ func (c *Checkout) scanItem(item product.Item) error {
 	return nil
 }
 
-func (c *Checkout) getPrice() int {
+func (c *Checkout) GetPrice() int {
 	var price int
 	for _, item := range c.basket {
 		price += item.Price
@@ -73,6 +73,6 @@ func (c *Checkout) calculateDiscount(basket []product.Item) int {
 			hasDiscount = false
 		}
 	}
-	
+
 	return totalPriceDiff
 }
