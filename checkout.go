@@ -1,11 +1,9 @@
 package main
 
-import (
-	"errors"
-)
+import "errors"
 
 type Checkout struct {
-	skus []string
+	basket []string
 }
 
 const errorEmptySKU = "Empty SKU"
@@ -15,11 +13,9 @@ func NewCheckout() *Checkout {
 }
 
 func (c *Checkout) scanItem(sku string) error {
-
 	if sku == "" {
 		return errors.New(errorEmptySKU)
 	}
-
-	c.skus = append(c.skus, sku)
+	c.basket = append(c.basket, sku)
 	return nil
 }
