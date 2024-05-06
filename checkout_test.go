@@ -34,22 +34,13 @@ func TestAddMultipleItems(t *testing.T) {
 	item3 := Item{sku: "C", price: 300}
 
 	err := checkout.scanItem(item1)
-
-	if err != nil {
-		t.Errorf("Error adding item1: %s", err)
-	}
+	AssertError(t, err, "Error adding item1")
 
 	err = checkout.scanItem(item2)
-
-	if err != nil {
-		t.Errorf("Error adding item2: %s", err)
-	}
+	AssertError(t, err, "Error adding item2")
 
 	err = checkout.scanItem(item3)
-
-	if err != nil {
-		t.Errorf("Error adding item3: %s", err)
-	}
+	AssertError(t, err, "Error adding item3")
 
 	if len(checkout.basket) != 3 {
 		t.Fatalf("Expected 3 items in basket, got %d", len(checkout.basket))
@@ -63,12 +54,13 @@ func TestTotalPriceOfItems(t *testing.T) {
 	item3 := Item{sku: "C", price: 5}
 
 	err := checkout.scanItem(item1)
-	err = checkout.scanItem(item2)
-	err = checkout.scanItem(item3)
+	AssertError(t, err, "Error scanning item1")
 
-	if err != nil {
-		t.Errorf("Error scanning items: %s", err)
-	}
+	err = checkout.scanItem(item2)
+	AssertError(t, err, "Error scanning item2")
+
+	err = checkout.scanItem(item3)
+	AssertError(t, err, "Error scanning item3")
 
 	price := checkout.getPrice(pricingscheme.PricingScheme{})
 
@@ -87,39 +79,30 @@ func TestTotalPriceWithSingleDiscount(t *testing.T) {
 
 	pricingScheme := pricingscheme.PricingScheme{Sku: "A", Quantity: 3, DiscountedPrice: 12}
 
+	// scan items
 	err := checkout.scanItem(item1)
-
-	if err != nil {
-		t.Errorf("Error scanning item1: %s", err)
-	}
+	AssertError(t, err, "Error scanning item1")
 
 	err = checkout.scanItem(item2)
-
-	if err != nil {
-		t.Errorf("Error scanning item2: %s", err)
-	}
+	AssertError(t, err, "Error scanning item2")
 
 	err = checkout.scanItem(item3)
-
-	if err != nil {
-		t.Errorf("Error scanning item3: %s", err)
-	}
+	AssertError(t, err, "Error scanning item3")
 
 	err = checkout.scanItem(item4)
-
-	if err != nil {
-		t.Errorf("Error scanning item4: %s", err)
-	}
+	AssertError(t, err, "Error scanning item4")
 
 	err = checkout.scanItem(item5)
-
-	if err != nil {
-		t.Errorf("Error scanning item5: %s", err)
-	}
+	AssertError(t, err, "Error scanning item5")
 
 	price := checkout.getPrice(pricingScheme)
-
 	if price != 32 {
 		t.Fatalf("Expected price 32, got %d", price)
+	}
+}
+
+func AssertError(t *testing.T, err error, message string) {
+	if err != nil {
+		t.Errorf("%s: %s", message, err)
 	}
 }
