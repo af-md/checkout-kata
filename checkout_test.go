@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"go-checkout-kata/pricingscheme"
+	"testing"
+)
 
 func TestAddItem(t *testing.T) {
 	c := NewCheckout()
@@ -67,9 +70,56 @@ func TestTotalPriceOfItems(t *testing.T) {
 		t.Errorf("Error scanning items: %s", err)
 	}
 
-	price := checkout.getPrice()
+	price := checkout.getPrice(pricingscheme.PricingScheme{})
 
 	if price != 15 {
 		t.Errorf("Expected price 15, got %d", price)
+	}
+}
+
+func TestTotalPriceWithSingleDiscount(t *testing.T) {
+	checkout := NewCheckout()
+	item1 := Item{sku: "A", price: 5}
+	item2 := Item{sku: "B", price: 10}
+	item3 := Item{sku: "A", price: 5}
+	item4 := Item{sku: "A", price: 5}
+	item5 := Item{sku: "B", price: 10}
+
+	pricingScheme := pricingscheme.PricingScheme{Sku: "A", Quantity: 3, DiscountedPrice: 12}
+
+	err := checkout.scanItem(item1)
+
+	if err != nil {
+		t.Errorf("Error scanning item1: %s", err)
+	}
+
+	err = checkout.scanItem(item2)
+
+	if err != nil {
+		t.Errorf("Error scanning item2: %s", err)
+	}
+
+	err = checkout.scanItem(item3)
+
+	if err != nil {
+		t.Errorf("Error scanning item3: %s", err)
+	}
+
+	err = checkout.scanItem(item4)
+
+	if err != nil {
+		t.Errorf("Error scanning item4: %s", err)
+	}
+
+	err = checkout.scanItem(item5)
+
+	if err != nil {
+		t.Errorf("Error scanning item5: %s", err)
+	}
+
+	price := checkout.getPrice(pricingScheme)
+
+	if price != 32 {
+		t.Fatalf("Expected price 32, got %d", price)
 	}
 }
